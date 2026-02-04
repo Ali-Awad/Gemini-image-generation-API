@@ -8,6 +8,7 @@ venv/
 # Project specific
 batch_input_images.jsonl
 *.jsonl
+USAGE.md
 
 # Ignore content of these folders, but keep the folder itself
 input_images/*
