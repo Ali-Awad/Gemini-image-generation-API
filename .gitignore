@@ -1,0 +1,16 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+.env
+
+# Project specific
+batch_input_images.jsonl
+*.jsonl
+
+# Ignore content of these folders, but keep the folder itself
+input_images/*
+!input_images/.gitkeep
+generated_images/*
+!generated_images/.gitkeep
