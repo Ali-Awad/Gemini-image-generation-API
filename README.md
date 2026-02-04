@@ -1,4 +1,4 @@
-# Gemini Batch Image Enhancer
+# Gemini Batch Image Generator/Enhancer
 
 A Python-based toolkit for processing large batches of images using Google's Gemini 3 Pro Image model (Batch API). This tool automates the workflow of uploading images, submitting batch enhancement jobs, and organizing the downloaded results.
 
