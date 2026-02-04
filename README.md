@@ -47,7 +47,10 @@ A Python-based toolkit for processing large batches of images using Google's Gem
 ### 1. Prepare Inputs
 Place your images (`.jpg`, `.png`, `.webp`) in the `input_images/` folder.
 
-### 2. Submit a Batch Job
+### 2. Set the Prompt (optional)
+The text prompt sent to the model is defined in **`submit_image_batch.py`**. Edit the `prompt_text` variable (around line 66) to change what the model does with each image—e.g. style, color correction, or instructions. Keep it as a single multi-line string.
+
+### 3. Submit a Batch Job
 Run the submission script:
 ```bash
 python submit_image_batch.py
@@ -56,7 +59,7 @@ python submit_image_batch.py
 - You can set the **Image Size** (1K, 2K, 4K).
 - *Note: Candidate count is currently restricted to 1 for the preview model.*
 
-### 3. Monitor Status
+### 4. Monitor Status
 Check the status of your jobs:
 ```bash
 python check_jobs.py
@@ -65,7 +68,7 @@ python check_jobs.py
 - **Orange:** Job is Pending/Queued.
 - **Blue:** Shows your custom Job Name.
 
-### 4. Download Results
+### 5. Download Results
 Once a job is `SUCCEEDED`, download the images:
 ```bash
 python download_images.py
@@ -73,7 +76,7 @@ python download_images.py
 - Enter the Job Name or ID to download specific results.
 - Images will be saved in `generated_images/job_[JobName]/`.
 
-### 5. Cleanup (Optional)
+### 6. Cleanup (Optional)
 To cancel running jobs or delete history/files:
 ```bash
 python cleanup_resources.py
