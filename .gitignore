@@ -6,6 +6,7 @@ venv/
 .env
 
 # Project specific
+.download_images_temp
 batch_input_images.jsonl
 *.jsonl
 USAGE.md

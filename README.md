@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="figs/API_cover.jpg" alt="Gemini Batch Image Generator/Enhancer" width="100%">
+  <img src="figs/API_cover.png" alt="Gemini Batch Image Generator/Enhancer" width="100%">
 </p>
 
 # Gemini Batch Image Generator/Enhancer
