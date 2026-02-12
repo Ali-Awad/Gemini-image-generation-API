@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="figs/API_cover.jpg" alt="Gemini Batch Image Generator/Enhancer" width="100%">
+</p>
+
 # Gemini Batch Image Generator/Enhancer
 
 A Python-based toolkit for processing large batches of images using Google's Gemini 3 Pro Image model (Batch API). This tool automates the workflow of uploading images, submitting batch enhancement jobs, and organizing the downloaded results.
@@ -7,7 +11,7 @@ A Python-based toolkit for processing large batches of images using Google's Gem
 - **Batch Processing:** Submit hundreds of images for enhancement in a single job.
 - **Concurrent Uploads:** Fast, multi-threaded image uploading (default 10 threads).
 - **Cost-Effective:** Uses the Gemini Batch API (50% cheaper than standard requests).
-- **Organized Results:** Automatically creates dedicated folders for each job to prevent overwriting.
+- **Organized Results:** Automatically creates dedicated folders for each job and mirrors your input folder structure in the output.
 - **Job Management:** Scripts to check status (with color-coded output) and clean up resources.
 - **Customizable:** Configure candidate count and image resolution per job.
 
@@ -46,6 +50,7 @@ A Python-based toolkit for processing large batches of images using Google's Gem
 
 ### 1. Prepare Inputs
 Place your images (`.jpg`, `.png`, `.webp`) in the `input_images/` folder.
+You can organize them into subfolders (e.g., `input_images/nature/tree.jpg`), and this structure will be preserved in the output.
 
 ### 2. Set the Prompt (optional)
 The text prompt sent to the model is defined in **`submit_image_batch.py`**. Edit the `prompt_text` variable (around line 66) to change what the model does with each image—e.g. style, color correction, or instructions. Keep it as a single multi-line string.
@@ -75,6 +80,7 @@ python download_images.py
 ```
 - Enter the Job Name or ID to download specific results.
 - Images will be saved in `generated_images/job_[JobName]/`.
+- **Note:** If you used subfolders in `input_images`, they will be recreated here (e.g., `generated_images/job_[Name]/nature/tree.jpg`).
 
 ### 6. Cleanup (Optional)
 To cancel running jobs or delete history/files:

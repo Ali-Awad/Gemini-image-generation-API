@@ -83,7 +83,18 @@ def submit_batch():
 
     # 1. Upload Images
     print(f"Scanning '{input_dir}' for images...")
-    image_files = [f for f in os.listdir(input_dir) if f.lower().endswith(('.jpg', '.jpeg', '.png', '.webp'))]
+    
+    image_files = []
+    # Walk through directory recursively
+    for root, dirs, files in os.walk(input_dir):
+        for file in files:
+            if file.lower().endswith(('.jpg', '.jpeg', '.png', '.webp')):
+                full_path = os.path.join(root, file)
+                # Create relative path for ID (e.g. "subfolder/image.jpg")
+                rel_path = os.path.relpath(full_path, input_dir)
+                # Normalize to forward slashes for consistency as ID
+                rel_path = rel_path.replace(os.sep, '/')
+                image_files.append((full_path, rel_path))
     
     if not image_files:
         print("No images found.")
@@ -96,9 +107,10 @@ def submit_batch():
     max_workers = 10
     with ThreadPoolExecutor(max_workers=max_workers) as executor:
         # Submit all upload tasks
+        # Map future to the relative path (ID)
         future_to_file = {
-            executor.submit(upload_single_file, client, os.path.join(input_dir, img_file)): img_file 
-            for img_file in image_files
+            executor.submit(upload_single_file, client, full_path): rel_path 
+            for full_path, rel_path in image_files
         }
         
         # Process results as they complete
@@ -106,18 +118,18 @@ def submit_batch():
         total_count = len(image_files)
         
         for future in as_completed(future_to_file):
-            img_file = future_to_file[future]
+            rel_path = future_to_file[future]
             completed_count += 1
             
             try:
                 file_obj, error = future.result()
                 if file_obj:
-                    uploaded_files[img_file] = file_obj
-                    print(f"[{completed_count}/{total_count}] Ready: {img_file}")
+                    uploaded_files[rel_path] = file_obj
+                    print(f"[{completed_count}/{total_count}] Ready: {rel_path}")
                 else:
-                    print(f"[{completed_count}/{total_count}] Failed {img_file}: {error}")
+                    print(f"[{completed_count}/{total_count}] Failed {rel_path}: {error}")
             except Exception as e:
-                print(f"[{completed_count}/{total_count}] Error {img_file}: {e}")
+                print(f"[{completed_count}/{total_count}] Error {rel_path}: {e}")
 
     if not uploaded_files:
         print("No files were successfully uploaded. Aborting.")

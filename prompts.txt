@@ -1,0 +1,20 @@
+V1 prompt:
+"Enhance this underwater image by removing degradation caused by underwater effects and give it a natural look."
+
+excluded:
+17_img_.jpg (erroring)
+15544.jpg (severely hallucinated)
+70 images that doesn't meet the minimum dimension
+
+------------------------------------------------------------
+v2 prompt:
+"Perform a deep color-correction on this underwater image. Apply aggressive color recovery to restore the warm reddish and orange spectrums lost to water depth, specifically neutralizing the dominant cyan/green cast. The seabed (only where present) must be corrected to a natural, earthy brown 'dirt' color. Remove all volumetric haze to make the water appear crystal-clear, but strictly maintain the original background scenery and environment. Do not alter, add, or remove any objects or structural elements in the foreground or background. Ensure 1:1 compositional integrity while sharpening details and removing low-light noise. The result should look like a professional photograph captured with high-powered red-spectrum strobe lighting."
+
+excluded:
+17_img_.jpg (erroring)
+15544.jpg (severely hallucinated)
+70 images that doesn't meet the minimum dimension
+--------------------------------------------------------------------
+
+v3 prompt:
+"Perform a deep enhancement and color correction on this underwater image by restoring the red channel lost to water depth while neutralizing dominant color casts, especially cyan and green. Remove haze, backscatter, turbidity, and volumetric degradation to achieve crystal-clear water while strictly preserving the original environment, background scenery, and all foreground and background elements with full 1:1 compositional integrity. Correct the seabed, where present, to a natural earthy brown dirt tone, ensure plants retain natural coloration, improve global and local contrast for stronger depth and subject separation, and restore and preserve fine details and textures, ensuring clarity and sharpness appropriate for a significantly upscaled high-resolution output without artificial sharpening. Remove low-light noise, maintain realistic underwater lighting and smooth gradients, and ensure the final result appears as a professional photograph captured using professional underwater photography equipment."

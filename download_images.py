@@ -144,7 +144,14 @@ def download_images():
                                 
                                 # Decode and save
                                 img_bytes = base64.b64decode(img_data_b64)
-                                save_path = os.path.join(job_output_dir, final_filename)
+                                
+                                # Construct full path including subfolders
+                                # Ensure custom_id uses local OS separators
+                                local_filename = final_filename.replace('/', os.sep)
+                                save_path = os.path.join(job_output_dir, local_filename)
+                                
+                                # Create parent directory if it doesn't exist
+                                os.makedirs(os.path.dirname(save_path), exist_ok=True)
                                 
                                 with open(save_path, "wb") as img_f:
                                     img_f.write(img_bytes)
