@@ -48,42 +48,44 @@ A Python-based toolkit for processing large batches of images using Google's Gem
 
 ## Usage
 
-### 1. Prepare Inputs
-Place your images (`.jpg`, `.png`, `.webp`) in the `input_images/` folder.
-You can organize them into subfolders (e.g., `input_images/nature/tree.jpg`), and this structure will be preserved in the output.
+### 1. Setup
+- Put your images in the `input_images/` folder.
+- (Optional) You can use subfolders (e.g., `input_images/vacation/photo.jpg`), and the structure will be kept in the output.
 
-### 2. Set the Prompt (optional)
-The text prompt sent to the model is defined in **`submit_image_batch.py`**. Edit the `prompt_text` variable (around line 66) to change what the model does with each image—e.g. style, color correction, or instructions. Keep it as a single multi-line string.
+### 2. Edit the Prompt
+Open `submit_image_batch.py` and find the `prompt_text` variable (around line 66).
+Change the text inside the quotes to tell the AI what to do with your images.
 
-### 3. Submit a Batch Job
-Run the submission script:
+```python
+# Example in submit_image_batch.py:
+prompt_text = (
+    "Describe this image in detail..."
+)
+```
+
+### 3. Run the Batch
+Start the job:
 ```bash
 python submit_image_batch.py
 ```
-- You will be prompted to enter a **Job Name** (optional).
-- You can set the **Image Size** (1K, 2K, 4K).
-- *Note: Candidate count is currently restricted to 1 for the preview model.*
+Follow the on-screen prompts to set the job name and image size.
 
-### 4. Monitor Status
-Check the status of your jobs:
+### 4. Check Progress
+See if your job is done:
 ```bash
 python check_jobs.py
 ```
-- **Green:** Job is Running.
-- **Orange:** Job is Pending/Queued.
-- **Blue:** Shows your custom Job Name.
+Wait until the status says `SUCCEEDED`.
 
-### 5. Download Results
-Once a job is `SUCCEEDED`, download the images:
+### 5. Download Images
+Get your results:
 ```bash
 python download_images.py
 ```
-- Enter the Job Name or ID to download specific results.
-- Images will be saved in `generated_images/job_[JobName]/`.
-- **Note:** If you used subfolders in `input_images`, they will be recreated here (e.g., `generated_images/job_[Name]/nature/tree.jpg`).
+Your images will be saved in `generated_images/`.
 
 ### 6. Cleanup (Optional)
-To cancel running jobs or delete history/files:
+Cancel jobs or delete old files:
 ```bash
 python cleanup_resources.py
 ```
