@@ -1,6 +1,7 @@
 import os
 import json
 import base64
+import shutil
 import tempfile
 import urllib.request
 from urllib.error import HTTPError, URLError
@@ -10,6 +11,9 @@ from dotenv import load_dotenv
 # Chunk size for streaming download (avoid loading entire file into RAM)
 STREAM_CHUNK_SIZE = 1024 * 1024  # 1 MiB
 PROGRESS_INTERVAL = 200  # Print progress every N images
+
+# Where to find source images for failed items (must match submit_image_batch input_dir)
+INPUT_BASE_DIR = "input_images"
 
 # Marker file to track temp path so we can detect/clean leftover from interrupted runs
 _TEMP_MARKER = os.path.join(
@@ -67,6 +71,28 @@ def _format_response_reason(response: dict, candidate: dict | None = None) -> st
     if prompt_fb:
         parts.append(f"prompt_feedback={prompt_fb}")
     return "; ".join(parts) if parts else "no reason in response"
+
+
+def _copy_failed_to_unprocessed(
+    custom_id: str, job_output_dir: str, input_base_dir: str
+) -> None:
+    """Copy the source image for a failed item into job_output_dir/unprocessed, preserving path structure."""
+    if not custom_id or custom_id.startswith("unknown_"):
+        return
+    src_path = os.path.join(
+        input_base_dir, custom_id.replace("/", os.sep)
+    )
+    if not os.path.isfile(src_path):
+        return
+    unprocessed_dir = os.path.join(job_output_dir, "unprocessed")
+    dest_path = os.path.join(
+        unprocessed_dir, custom_id.replace("/", os.sep)
+    )
+    try:
+        os.makedirs(os.path.dirname(dest_path), exist_ok=True)
+        shutil.copy2(src_path, dest_path)
+    except OSError:
+        pass
 
 
 def _stream_download_to_file(api_key: str, file_name: str, dest_path: str) -> None:
@@ -226,6 +252,9 @@ def download_images():
                                 print(
                                     f"  Error for {custom_id}: {item['error']['message']}"
                                 )
+                                _copy_failed_to_unprocessed(
+                                    custom_id, job_output_dir, INPUT_BASE_DIR
+                                )
                                 continue
 
                             # Extract image
@@ -236,6 +265,9 @@ def download_images():
                                 reason = _format_response_reason(response, None)
                                 print(
                                     f"  No candidates returned for {custom_id} ({reason})"
+                                )
+                                _copy_failed_to_unprocessed(
+                                    custom_id, job_output_dir, INPUT_BASE_DIR
                                 )
                                 continue
 
@@ -250,6 +282,9 @@ def download_images():
                                 )
                                 print(
                                     f"  No content parts for {custom_id} ({reason})"
+                                )
+                                _copy_failed_to_unprocessed(
+                                    custom_id, job_output_dir, INPUT_BASE_DIR
                                 )
                                 continue
 
@@ -312,6 +347,9 @@ def download_images():
                                     )
                                     print(
                                         f"  No image found in candidate {i+1} for {custom_id} ({reason})"
+                                    )
+                                    _copy_failed_to_unprocessed(
+                                        custom_id, job_output_dir, INPUT_BASE_DIR
                                     )
                         except json.JSONDecodeError:
                             print("  Failed to parse JSON line.")

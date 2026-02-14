@@ -90,6 +90,11 @@ Cancel jobs or delete old files:
 python cleanup_resources.py
 ```
 
+## Output Behavior
+
+- **File Extensions:** The generated images will retain the same file extension as their corresponding input images (e.g., a `.jpg` input results in a `.jpg` output, and a `.png` input results in a `.png` output).
+- **Unprocessed Images:** Any images that fail processing or trigger safety filters are copied to an `unprocessed/` folder within the job's output directory, preserving their original filenames and extensions.
+
 ## Project Structure
 
 - `submit_image_batch.py`: Main script to upload images and start a batch job.

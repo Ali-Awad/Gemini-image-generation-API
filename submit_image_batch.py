@@ -38,6 +38,30 @@ def submit_batch():
     # Note: Full resource name usually required for batch matching
     model_id_full = f"models/{model_id}" 
 
+    if not os.path.exists(input_dir):
+        print(f"Error: Directory '{input_dir}' not found.")
+        return
+
+    # Ask which parent folder inside input_images (or all) — first so we know scope before other options
+    subdirs = sorted(
+        d for d in os.listdir(input_dir)
+        if os.path.isdir(os.path.join(input_dir, d))
+    )
+    if subdirs:
+        print(f"Parent folders in '{input_dir}': all | " + " | ".join(subdirs))
+    parent_choice = input(
+        "Which parent folder to process (or Enter for all): "
+    ).strip()
+    if parent_choice == "" or parent_choice.lower() == "all":
+        scan_root = input_dir
+        print(f"Processing all images under '{input_dir}'.")
+    else:
+        scan_root = os.path.join(input_dir, parent_choice)
+        if not os.path.isdir(scan_root):
+            print(f"Error: '{parent_choice}' is not a folder inside '{input_dir}'.")
+            return
+        print(f"Processing images under '{scan_root}' only.")
+
     # 0. User Input for Job Name
     user_job_name = input("Enter a name for this job (optional, press Enter for auto-generated): ").strip()
 
@@ -77,16 +101,12 @@ def submit_batch():
         }
     }
 
-    if not os.path.exists(input_dir):
-        print(f"Error: Directory '{input_dir}' not found.")
-        return
-
     # 1. Upload Images
-    print(f"Scanning '{input_dir}' for images...")
+    print(f"Scanning for images...")
     
     image_files = []
-    # Walk through directory recursively
-    for root, dirs, files in os.walk(input_dir):
+    # Walk from scan_root; keep rel_path relative to input_dir for consistent IDs
+    for root, dirs, files in os.walk(scan_root):
         for file in files:
             if file.lower().endswith(('.jpg', '.jpeg', '.png', '.webp')):
                 full_path = os.path.join(root, file)
